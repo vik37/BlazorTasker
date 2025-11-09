@@ -1,0 +1,36 @@
+﻿
+<div class="hstack">
+    <div class="d-flex flex-row">
+        <div><InputCheckbox @bind-Value="TaskItem.IsCompleted" @bind-Value:after="UpdateItem"></InputCheckbox></div>
+        <div class="px-2 flex-grow-1 @(TaskItem.IsCompleted ? "complete" : "")">@TaskItem.Name</div>
+        <div><a @onclick="DeleteTask"><i class="bi bi-trash-fill text-danger"></i></a></div>
+    </div>
+</div>
+
+@code {
+
+    /// <summary>
+    /// Tasker item we want to display
+    /// </summary>
+    [Parameter, EditorRequired]
+    public TaskItem? TaskItem { get; set; }
+
+    /// <summary>
+    /// Delete item callback
+    /// </summary>
+    [Parameter]
+    public EventCallback<TaskItem> OnDeleteCallback { get; set; }
+
+    [Parameter]
+    public EventCallback<TaskItem> OnCompleteCallback { get; set; }
+
+    private async Task DeleteTask()
+    {
+        await OnDeleteCallback.InvokeAsync(TaskItem);
+    }
+
+    private async Task UpdateItem()
+    {
+        await OnCompleteCallback.InvokeAsync(TaskItem);
+    }
+}
